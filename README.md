@@ -1,6 +1,7 @@
 ## NOTICE
 
 This repository contains the public FTC SDK for the POWERPLAY (2022-2023) competition season.
+It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Kit](https://www.gobilda.com/strafer-chassis-kit-v5/), which uses a mecanum drivetrain. This code was originated from [Game Manual 0's Mecanum Drivetrain Turorial](https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html), and then modified to our needs. 
 
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
