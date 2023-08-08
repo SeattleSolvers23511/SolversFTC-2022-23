@@ -3,6 +3,10 @@
 This repository contains the public FTC SDK for the POWERPLAY (2022-2023) competition season.
 It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Kit](https://www.gobilda.com/strafer-chassis-kit-v5/), which uses a mecanum drivetrain. This code was originated from [Game Manual 0's Mecanum Drivetrain Turorial](https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html), and then modified to our needs. 
 
+## Code Modifications from [Game Manual 0's Mecanum Drivetrain Turorial](https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html):
+- Updated Field_Centric_MecanumTeleOp.java & Robot_Centric_MecanumTeleOp.java code to now reset the Yaw Angle of robot to 0 with the press of the back button, added brakes to wheels, and added code that allows the robot to move faster based on how hard the Left Trigger (LT) is pushed/pressed (subject to change).
+- Added Combined_MecanumTeleOp.java, which switches between Field Centric Mode and Robot Centric mode. The toggle to switch them is the Left Joystick Button.
+
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
 
