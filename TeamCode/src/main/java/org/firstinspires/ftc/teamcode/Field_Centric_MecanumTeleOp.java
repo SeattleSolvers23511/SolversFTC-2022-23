@@ -20,6 +20,12 @@ public class Field_Centric_MecanumTeleOp extends LinearOpMode {
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
+        // Set the zero power behavior to BRAKE for all motors
+        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -56,14 +62,20 @@ public class Field_Centric_MecanumTeleOp extends LinearOpMode {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
+            // Speed control based on left trigger
+            double lt = gamepad1.left_trigger;
+            double baseSpeed = 0.15; // Minimum speed
+            double maxSpeed = 1.0; // Maximum speed
+            double speed = baseSpeed + (maxSpeed - baseSpeed) * (1 - lt); // Inverted LT value
+
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
+            double frontLeftPower = (rotY + rotX + rx) * speed / denominator;
+            double backLeftPower = (rotY - rotX + rx) * speed / denominator;
+            double frontRightPower = (rotY - rotX - rx) * speed / denominator;
+            double backRightPower = (rotY + rotX - rx) * speed / denominator;
 
             motorFrontLeft.setPower(frontLeftPower);
             motorBackLeft.setPower(backLeftPower);
