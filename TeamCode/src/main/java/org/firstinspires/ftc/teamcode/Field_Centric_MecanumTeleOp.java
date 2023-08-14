@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.IMU;
+
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp
@@ -46,7 +48,6 @@ public class Field_Centric_MecanumTeleOp extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
-
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Mode", "Field-Centric");
         telemetry.update();
@@ -61,7 +62,7 @@ public class Field_Centric_MecanumTeleOp extends LinearOpMode {
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
 
-            // Convert the raw x and y values to robot-centric forward and sideways velocities
+            // Convert the raw x and y values to field-centric forward and sideways velocities
             double forward = y * Math.cos(getBotHeading()) + x * Math.sin(getBotHeading());
             double sideways = -y * Math.sin(getBotHeading()) + x * Math.cos(getBotHeading());
             double rotation = rx;
