@@ -31,6 +31,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
 
 - The path name should look something like this (assuming you extracted the .zip folder to your Downloads folder): ```C:\Users\user_name\Downloads\SolversFTC-2022-23-code\SolversFTC-2022-23-code```
     - Make sure to replace user_name with your account's actual name of user
+- The rest of this README.md is unmodified from the FTC's official SDK for the 2022-2023 POWERPLAY season, {FtcRobotController](https://github.com/FIRST-Tech-Challenge/FtcRobotController#readme).
 
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot. To use this SDK, download/clone the entire project to your local computer.
