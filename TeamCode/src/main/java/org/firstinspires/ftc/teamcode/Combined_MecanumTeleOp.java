@@ -231,7 +231,6 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 motorFrontRight.setPower(frontRightPower);
                 motorBackRight.setPower(backRightPower);
 
-
                 // Display motorViperSlide encoder position
                 telemetry.addData("Mode:", "Robot-Centric");
                 telemetry.addData("Speed", speed);
@@ -239,7 +238,6 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 telemetry.addData("Back Left Power", backLeftPower);
                 telemetry.addData("Front Right Power", frontRightPower);
                 telemetry.addData("Back Right Power", backRightPower);
-
             }
 
             // Displays motorViperSlide encoder position
