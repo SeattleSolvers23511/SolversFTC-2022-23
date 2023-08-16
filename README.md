@@ -6,16 +6,19 @@ This repository contains the public FTC SDK for the POWERPLAY (2022-2023) compet
 It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Kit](https://www.gobilda.com/strafer-chassis-kit-v5/), which uses a mecanum drivetrain. This code was originated from [Game Manual 0's Mecanum Drivetrain Turorial](https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html), and then modified to our needs. All code is in [Java](https://www.java.com/en/). 
 
 - Updated the [Field_Centric_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Field_Centric_MecanumTeleOp.java) & [Robot_Centric_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Robot_Centric_MecanumTeleOp.java) Java files to now reset the Yaw Angle of robot to 0 with the press of the back button, added brakes to wheels, and added code that allows the robot to move faster based on how hard the Left Trigger (LT) is pushed/pressed (when not pressed, the default speed is 0.15 or 15% speed, when fully pressed, the speed is increased to 1 or 100%).
+  
 - Added [Combined_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Combined_MecanumTeleOp.java), which switches between Field Centric Mode and Robot Centric mode. The toggle to switch them is the Left Joystick Button.
-  	- Added control for the viper slide:
+  	
+   - Added control for the viper slide:
 		- Up Button on dPad moves viper slide motor (motorViperSlide) counterclockwise (up) at the speed of motorViperSlideSpeed (which is set to 0.8, or 80% speed).
-		-Down Button on dPad moves viper slide motor (motorViperSlide) clockwise (down) at the speed of -motorViperSlideSpeed (which is set to 0.8, or 80% speed)
-		-While button "a" is held down, the viper slide will move down until the encoder tick is 0 (to get it to the ground).
-		-While button "x" is held down, the viper slide will move up or down until the encoder tick is -1510 (for small pole).
-		-While button "y" is held down, the viper slide will move down until the encoder tick is -2519 (for medium pole).
-		-While button "b" is held down, the viper slide will move down until the encoder tick is -3450 (for large pole).
-			- Note that these buttons use the speed of motorViperSlideSpeed to move.
+		- Down Button on dPad moves viper slide motor (motorViperSlide) clockwise (down) at the speed of -motorViperSlideSpeed (which is set to 0.8, or 80% speed)
+		- While button "a" is held down, the viper slide will move down until the encoder tick is 0 (to get it to the ground).
+		- While button "x" is held down, the viper slide will move up or down until the encoder tick is -1510 (for small pole).
+		- While button "y" is held down, the viper slide will move down until the encoder tick is -2519 (for medium pole).
+		- While button "b" is held down, the viper slide will move down until the encoder tick is -3450 (for large pole).
+		- Note that these buttons use the speed of motorViperSlideSpeed to move.
 		- Added brake using motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+
 - Modified all of the controller code to change it from Xbox controllers to our controller, the [Logitech F310](https://www.amazon.com/Logitech-940-000110-Gamepad-F310/dp/B003VAHYQY/ref=sr_1_1?keywords=logitech+f310&qid=1691515991&sr=8-1).
 
 ## Welcome!
