@@ -14,8 +14,8 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
 		- Down Button on dPad moves viper slide motor (motorViperSlide) clockwise (down) at the speed of -motorViperSlideSpeed (which is set to 0.8, or 80% speed)
 		- While button "a" is held down, the viper slide will move down until the encoder tick is 0 (to get it to the ground).
 		- While button "x" is held down, the viper slide will move up or down until the encoder tick is -1510 (for small pole).
-		- While button "y" is held down, the viper slide will move down until the encoder tick is -2519 (for medium pole).
-		- While button "b" is held down, the viper slide will move down until the encoder tick is -3450 (for large pole).
+		- While button "y" is held down, the viper slide will move up or down until the encoder tick is -2519 (for medium pole).
+		- While button "b" is held down, the viper slide will move up or down until the encoder tick is -3450 (for large pole).
 		- Note that these buttons use the speed of motorViperSlideSpeed to move.
 		- Added brake using motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
