@@ -16,6 +16,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
     DcMotor motorBackLeft;
     DcMotor motorFrontRight;
     DcMotor motorBackRight;
+    DcMotor motorViperSlide;
     IMU imu;
 
     boolean isFieldCentric = true; // Default to field-centric mode
@@ -28,12 +29,15 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
         motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
         motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+        motorViperSlide = hardwareMap.dcMotor.get("motorViperSlide");
+        motorViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set the zero power behavior to BRAKE for all motors
         motorFrontLeft.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBackLeft.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorFrontRight.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+        motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
@@ -48,7 +52,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
-
+        double motorViperSlideSpeed = 0.8;
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Mode", "Field-Centric");
         telemetry.update();
@@ -70,11 +74,47 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 }
                 telemetry.update();
             }
-
+            int position = motorViperSlide.getCurrentPosition();
             // Get raw values from the gamepad
             double y = -gamepad1.left_stick_y; // Negative because the gamepad's y-axis is inverted
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
+
+            int small_pole = -1510;
+            int medium_pole = -2519;
+            int large_pole = -3450;
+
+            if (gamepad1.a){
+                motorViperSlide.setTargetPosition(0);
+                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorViperSlide.setPower(motorViperSlideSpeed);
+            }
+            else if (gamepad1.x){
+                motorViperSlide.setTargetPosition(small_pole);
+                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorViperSlide.setPower(motorViperSlideSpeed);
+            }
+            else if (gamepad1.y){
+                motorViperSlide.setTargetPosition(medium_pole);
+                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorViperSlide.setPower(motorViperSlideSpeed);
+            }
+            else if (gamepad1.b){
+                motorViperSlide.setTargetPosition(large_pole);
+                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorViperSlide.setPower(motorViperSlideSpeed);
+            }
+            else if (gamepad1.dpad_down) {
+                motorViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorViperSlide.setPower(motorViperSlideSpeed); // Clockwise at 20% speed
+            } else if (gamepad1.dpad_up) {
+                motorViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorViperSlide.setPower(-motorViperSlideSpeed); // Counterclockwise at 20% speed
+            } else {
+                motorViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE); // Brake when not moving
+                motorViperSlide.setPower(0); // Stop
+            }
 
             double forward, sideways, rotation;
 
@@ -87,7 +127,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 // Use the LT value as an acceleration factor.
                 // LT value is between 0 (not pressed) and 1 (fully pressed).
                 double lt = gamepad1.left_trigger;
-                double speed = accelerationFactor + (1 - accelerationFactor) * lt;
+                double ltSpeed = accelerationFactor + (1 - accelerationFactor) * lt;
 
                 // Reset the yaw angle to 0 degrees when the "Back" button is pressed.
                 if (gamepad1.back) {
@@ -105,10 +145,10 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 // This ensures all the powers maintain the same ratio, but only when
                 // at least one is out of the range [-1, 1]
                 double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-                double frontLeftPower = (rotY + rotX + rx) / denominator * speed;
-                double backLeftPower = (rotY - rotX + rx) / denominator * speed;
-                double frontRightPower = (rotY - rotX - rx) / denominator * speed;
-                double backRightPower = (rotY + rotX - rx) / denominator * speed;
+                double frontLeftPower = (rotY + rotX + rx) / denominator * ltSpeed;
+                double backLeftPower = (rotY - rotX + rx) / denominator * ltSpeed;
+                double frontRightPower = (rotY - rotX - rx) / denominator * ltSpeed;
+                double backRightPower = (rotY + rotX - rx) / denominator * ltSpeed;
 
                 // Set motor powers
                 motorFrontLeft.setPower(frontLeftPower);
@@ -116,12 +156,16 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 motorFrontRight.setPower(frontRightPower);
                 motorBackRight.setPower(backRightPower);
 
-                telemetry.addData("Mode:","Field-Centric");
-                telemetry.addData("Speed", speed);
+                // Control motorViperSlide using dpad
+
+                // Display motorViperSlide encoder position
+                telemetry.addData("Mode:", "Field-Centric");
+                telemetry.addData("Speed", ltSpeed);
                 telemetry.addData("Front Left Power", frontLeftPower);
                 telemetry.addData("Back Left Power", backLeftPower);
                 telemetry.addData("Front Right Power", frontRightPower);
                 telemetry.addData("Back Right Power", backRightPower);
+
             } else {
                 // Robot-Centric Mode
                 // Convert the raw x and y values to robot-centric forward and sideways velocities
@@ -130,7 +174,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 rotation = rx;
 
                 // Use the LT value as an acceleration factor.
-                // LT value is between 0 (not pressed) and 1 (fully pressed).
+                // LT value is between 0.15 (not pressed) and 1 (fully pressed).
                 double lt = gamepad1.left_trigger;
                 double speed = accelerationFactor + (1 - accelerationFactor) * lt;
 
@@ -138,7 +182,6 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 if (gamepad1.back) {
                     imu.resetYaw();
                 }
-
                 // Calculate motor powers using mecanum drive kinematics
                 double frontLeftPower = (forward + sideways + rotation) * speed;
                 double backLeftPower = (forward - sideways + rotation) * speed;
@@ -151,14 +194,19 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 motorFrontRight.setPower(frontRightPower);
                 motorBackRight.setPower(backRightPower);
 
-                telemetry.addData("Mode:","Robot-Centric");
+
+                // Display motorViperSlide encoder position
+                telemetry.addData("Mode:", "Robot-Centric");
                 telemetry.addData("Speed", speed);
                 telemetry.addData("Front Left Power", frontLeftPower);
                 telemetry.addData("Back Left Power", backLeftPower);
                 telemetry.addData("Front Right Power", frontRightPower);
                 telemetry.addData("Back Right Power", backRightPower);
+
             }
 
+            telemetry.addData("ViperSlide Position", motorViperSlide.getCurrentPosition());
+            telemetry.addData("ViperSlide MOde", motorViperSlide.getMode());
             telemetry.update();
         }
     }
