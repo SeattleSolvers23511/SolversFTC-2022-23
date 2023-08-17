@@ -106,8 +106,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
 
-            int small_pole = -1510; // The encoder position for the small pole
-            int medium_pole = -2519; // The encoder position for the medium pole
+            int small_pole = -1710; // The encoder position for the small pole
+            int medium_pole = -2719; // The encoder position for the medium pole
             int large_pole = -4087; // The encoder position for the large pole
             // Note that all encoder positions are negative because counterclockwise moves the slide up
 
