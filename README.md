@@ -17,9 +17,9 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
       - While using dPad buttons, you can only move up if the encoder tick value is greater than `-4400` (which is negative since for our viper slide motor, moving it counterclockwise moves it up), which prevents it from moving past its limits and possibly damaging the motor. In addition, you can only move down if the encoder tick value is less than `0`, which prevents it from moving too far down.
 
     - While button "a" is held down, the viper slide will move down until the encoder tick is 0 (to get it to the ground).
-    - While button "x" is held down, the viper slide will move up or down until the encoder tick is -1510 (for small pole).
-    - While button "y" is held down, the viper slide will move up or down until the encoder tick is -2519 (for medium pole).
-    - While button "b" is held down, the viper slide will move up or down until the encoder tick is -3780 (for large pole).
+    - While button "x" is held down, the viper slide will move up or down until the encoder tick is -1710 (for small pole).
+    - While button "y" is held down, the viper slide will move up or down until the encoder tick is -2719 (for medium pole).
+    - While button "b" is held down, the viper slide will move up or down until the encoder tick is -4087 (for large pole).
     - Note that these buttons use the speed of motorViperSlideSpeed to move.
 
     - Added brake using `motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);`
