@@ -67,6 +67,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
         // Variable that stores the speed of the viper slide motor, modify based on what works best for your robot
         double motorViperSlideSpeed = 0.8;
 
+        int previousGamepadButton = 0;
+
         // Adds telemetry to the Driver Station
         telemetry.addData("Status", "Initialized"); // Adds Initialized Status
         telemetry.addData("Mode", "Field-Centric"); // Since the default mode is Field-Centric, sets Field-Centric to be the mode that is added to REV Driver Hub
@@ -89,10 +91,10 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
 
                 if (isFieldCentric) { // Activates when the mode is Field Centric
                     telemetry.addData("Mode", "Field-Centric"); // Report the mode change to Field-Centric on Driver Hub
-
                 } else { // Activates when the mode is Field Centric
                     telemetry.addData("Mode", "Robot-Centric"); // Report the mode change to Robot-Centric on Driver Hub
                 }
+
                 telemetry.update(); // Adds the mode telemetry to REV Driver Hub
             }
 
@@ -106,61 +108,50 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
 
             int small_pole = -1510; // The encoder position for the small pole
             int medium_pole = -2519; // The encoder position for the medium pole
-            int large_pole = -3780; // The encoder position for the large pole
+            int large_pole = -4087; // The encoder position for the large pole
             // Note that all encoder positions are negative because counterclockwise moves the slide up
 
             // Controls for vipers slide using presets
             // When the "a" button is pressed, the viper slide motor will move to the bottom (0) using encoders
             if (gamepad1.a) {
-                motorViperSlide.setTargetPosition(0); // Sets target position to 0
-                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position 0 while the "a" button is pressed and held down.
-                motorViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
+                previousGamepadButton = 0;
+                motorViperSlideSpeed = 0.8;
+
+                // When the "x" button is pressed, the viper slide motor will move to the small pole position using encoders
+            } else if (gamepad1.x) {
+                previousGamepadButton = small_pole;
+                motorViperSlideSpeed = 0.8;
+
+                // When the "y" button is pressed, the viper slide motor will move to the medium pole position using encoders
+            } else if (gamepad1.y) {
+                previousGamepadButton = medium_pole;
+                motorViperSlideSpeed = 0.8;
+
+                // When the "b" button is pressed, the viper slide motor will move to the large pole position using encoders
+            } else if (gamepad1.b) {
+                previousGamepadButton = large_pole;
+                motorViperSlideSpeed = 0.8;
+
+                // Control motorViperSlide using dpad (no presets)
+                // When the down dpad is pressed, the viper slide motor will move down using encoders
+            } else if (gamepad1.dpad_down && motorViperSlide.getCurrentPosition() < 0) { // Checks if the motor is at the bottom to make sure it cannot run past it
+                previousGamepadButton = (motorViperSlide.getCurrentPosition() + 100);
+                motorViperSlideSpeed = 0.4;
+
+                // When the up dpad is pressed, the viper slide motor will move up using encoders
+            } else if (gamepad1.dpad_up && motorViperSlide.getCurrentPosition() > -4400) { // Checks if the motor is nearly at the top to make sure it cannot run past it
+                previousGamepadButton = (motorViperSlide.getCurrentPosition() - 100);
+                motorViperSlideSpeed = -0.4;
+
+                // When the up right bumper is pressed, the viper slide motor will move down using encoders. THIS IS A FAIL SAFE ONLY IN CASE THE ENCODER VALUE IS RESET TO 0 IN THE WRONG PLACE!
+            } else if (gamepad1.right_bumper) {
+                previousGamepadButton = (motorViperSlide.getCurrentPosition() + 100);
+                motorViperSlideSpeed = 0.4;
             }
 
-            // When the "x" button is pressed, the viper slide motor will move to the small pole position using encoders
-            else if (gamepad1.x) {
-                motorViperSlide.setTargetPosition(small_pole); // Sets target position to small_pole
-                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position small_pole while the "x" button is pressed and held down.
-                motorViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
-            }
-
-            // When the "y" button is pressed, the viper slide motor will move to the medium pole position using encoders
-            else if (gamepad1.y) {
-                motorViperSlide.setTargetPosition(medium_pole); // Sets target position to medium_pole
-                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position medium_pole while the "y" button is pressed and held down.
-                motorViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
-            }
-
-            // When the "b" button is pressed, the viper slide motor will move to the large pole position using encoders
-            else if (gamepad1.b) {
-                motorViperSlide.setTargetPosition(large_pole); // Sets target position to large_pole
-                motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position large_pole while the "b" button is pressed and held down.
-                motorViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
-            }
-
-            // Control motorViperSlide using dpad (no presets)
-            // When the down dpad is pressed, the viper slide motor will move down using encoders
-            else if (gamepad1.dpad_down) {
-                if (motorViperSlide.getCurrentPosition() < -100) { // Checks if the motor is at the bottom to make sure it cannot run past it
-                    motorViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // While the down dpad button is pressed, the viper slide will move down using the speed of motorViperSlideSpeed. Holding it down will cause it to move down for a larger distance more smoothly and quickly.
-                    motorViperSlide.setPower(motorViperSlideSpeed); // Runs clockwise at 80% speed, since counterclockwise moves the viper slide up
-                }
-            }
-
-            // When the up dpad is pressed, the viper slide motor will move up using encoders
-            else if (gamepad1.dpad_up ) {
-                if (motorViperSlide.getCurrentPosition() > -4200) { // Checks if the motor is nearly at the top to make sure it cannot run past it
-                    motorViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // While the up dpad button is pressed, the viper slide will move down using the speed of motorViperSlideSpeed. Holding it down will cause it to move up for a larger distance more smoothly and quickly.
-                    motorViperSlide.setPower(-motorViperSlideSpeed); // Runs counterclockwise at 80% speed, since counterclockwise moves the viper slide up
-                }
-            }
-
-            // When the viper slide motor is not moving, it will brake, causing it to hold its position
-            else {
-                motorViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Runs to make sure motor is still not running
-                motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE); // Brakes when not moving
-                motorViperSlide.setPower(0); // Sets power to 0, thus preventing it from running
-            }
+            motorViperSlide.setTargetPosition(previousGamepadButton); // Sets target position to the last gamepad button pressed
+            motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position 0 while the "a" button is pressed and held down.
+            motorViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
 
             // Creates three variables that are used for the Mecanum wheel calculations for Robot-Centric Mode
             double forward, sideways, rotation;
@@ -168,7 +159,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             // Convert the raw x and y values to robot-centric forward and sideways velocities for easier understanding
             forward = y;
             sideways = x;
-            rotation = rx;
+            rotation = -rx;
 
             // Use the LT value as an acceleration factor for all mecanum wheel movement.
             // LT value is between 0.15 (not pressed) and 1 (fully pressed).
@@ -198,10 +189,10 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 // Denominator is the largest motor power (absolute value) or 1
                 // This ensures all the powers maintain the same ratio, but only when at least one is out of the range [-1, 1]
                 double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-                double frontLeftPower = (rotY + rotX + rx) / denominator * ltSpeed;
-                double backLeftPower = (rotY - rotX + rx) / denominator * ltSpeed;
-                double frontRightPower = (rotY - rotX - rx) / denominator * ltSpeed;
-                double backRightPower = (rotY + rotX - rx) / denominator * ltSpeed;
+                double frontLeftPower = (rotY + rotX + rotation) / denominator * ltSpeed;
+                double backLeftPower = (rotY - rotX + rotation) / denominator * ltSpeed;
+                double frontRightPower = (rotY - rotX - rotation) / denominator * ltSpeed;
+                double backRightPower = (rotY + rotX - rotation) / denominator * ltSpeed;
 
                 // Set motor powers
                 motorFrontLeft.setPower(frontLeftPower);
