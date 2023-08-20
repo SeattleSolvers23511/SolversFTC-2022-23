@@ -24,6 +24,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
     // Creates IMU that is set to imu.
     IMU imu;
 
+    String last_button = ""; // Variable that stores the last gamepad1 press/call, which is displayed on REV control hub using telemetry.addData();
+
     boolean isFieldCentric = true; // Sets the default to field-centric mode when CombinedMecanumTeleOp is initialized on the REV Driver Hub.
 
     @Override
@@ -87,6 +89,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             // Toggle control mode on left joystick button press
             if (gamepad1.left_stick_button) {
                 isFieldCentric = !isFieldCentric; // Toggle the mode
+                last_button = "left stick button"; // Sets last button to "left stick button"
                 sleep(200); // Small delay to avoid multiple toggles
 
                 if (isFieldCentric) { // Activates when the mode is Field Centric
@@ -98,7 +101,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 telemetry.update(); // Adds the mode telemetry to REV Driver Hub
             }
 
-            // int position = motorViperSlide.getCurrentPosition(); // Unused variable that stores the current encoder position for the viper slide motor.
+            // int viperSlidePosition = motorViperSlide.getCurrentPosition(); // Unused variable that stores the current encoder position for the viper slide motor.
             // Note that when it is a non-zero number, it will be negative since moving the viper slide motor counterclockwise (which results in a negative position value) moves the viper slide up.
 
             // Get raw values from the gamepad
@@ -109,49 +112,58 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             int small_pole = -1710; // The encoder position for the small pole
             int medium_pole = -2719; // The encoder position for the medium pole
             int large_pole = -4087; // The encoder position for the large pole
-            // Note that all encoder positions are negative because counterclockwise moves the slide up
+            // Note that all encoder positions are negative because moving the vipers slide counterclockwise moves the slide up
 
             // Controls for vipers slide using presets
             // When the "a" button is pressed, the viper slide motor will move to the bottom (0) using encoders
             if (gamepad1.a) {
                 previousGamepadButton = 0;
                 motorViperSlideSpeed = 0.8;
+                last_button = "a"; // Sets last button to "a"
 
                 // When the "x" button is pressed, the viper slide motor will move to the small pole position using encoders
             } else if (gamepad1.x) {
                 previousGamepadButton = small_pole;
                 motorViperSlideSpeed = 0.8;
+                last_button = "x"; // Sets last button to "x"
 
                 // When the "y" button is pressed, the viper slide motor will move to the medium pole position using encoders
             } else if (gamepad1.y) {
                 previousGamepadButton = medium_pole;
                 motorViperSlideSpeed = 0.8;
+                last_button = "y"; // Sets last button to "y"
 
                 // When the "b" button is pressed, the viper slide motor will move to the large pole position using encoders
             } else if (gamepad1.b) {
                 previousGamepadButton = large_pole;
                 motorViperSlideSpeed = 0.8;
+                last_button = "b"; // Sets last button to "b"
 
-                // Control motorViperSlide using dpad (no presets)
+            // Control motorViperSlide without using presets
                 // When the down dpad is pressed, the viper slide motor will move down using encoders
             } else if (gamepad1.dpad_down && motorViperSlide.getCurrentPosition() < 0) { // Checks if the motor is at the bottom to make sure it cannot run past it
                 previousGamepadButton = (motorViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.4;
+                last_button = "dPad - down"; // Sets last button to "dPad - down"
 
                 // When the up dpad is pressed, the viper slide motor will move up using encoders
             } else if (gamepad1.dpad_up && motorViperSlide.getCurrentPosition() > -4400) { // Checks if the motor is nearly at the top to make sure it cannot run past it
                 previousGamepadButton = (motorViperSlide.getCurrentPosition() - 100);
                 motorViperSlideSpeed = -0.4;
+                last_button = "dPad - up"; // Sets last button to "dPad - up"
 
-                // When the up right bumper is pressed, the viper slide motor will move down using encoders. THIS IS A FAIL SAFE ONLY IN CASE THE ENCODER VALUE IS RESET TO 0 IN THE WRONG PLACE!
+                // When the right bumper is pressed, the viper slide motor will move down using encoders.
+                // It can move higher past viper slide encoder value 0 (positive numbers)
+                // THIS IS A FAIL SAFE ONLY IN CASE THE ENCODER VALUE IS RESET TO 0 IN THE WRONG PLACE!
             } else if (gamepad1.right_bumper) {
                 previousGamepadButton = (motorViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.4;
+                last_button = "right bumper"; // Sets last button to "right bumper"
             }
 
+            motorViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
             motorViperSlide.setTargetPosition(previousGamepadButton); // Sets target position to the last gamepad button pressed
             motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position 0 while the "a" button is pressed and held down.
-            motorViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
 
             // Creates three variables that are used for the Mecanum wheel calculations for Robot-Centric Mode
             double forward, sideways, rotation;
@@ -169,14 +181,16 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             // Reset the yaw angle to 0 degrees when the "Back" button is pressed. Is used for Field-Centric mode, but can be activated during Robot-Centric Mode for Field-Centric mode/
             if (gamepad1.back) {
                 imu.resetYaw();
+                last_button = "back"; // Sets last button to "back"
             }
 
             // Resets encoder value of viper slide motor to 0 when the right joystick button is pressed. Can be used in both Field-Centric and Robot-Centric mode.
             if (gamepad1.right_stick_button) {
                 motorViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                last_button = "right stick button"; // Sets last button to "right stick button"
             }
 
-            // If the robot is in Field-Centric Mode, the robot will NOT have a head (meaning that the robot's controls will change based off the direction it is facing). What direction is forward can be done be resetting the yaw angle to 0 degrees (through pressing gamepad.back).
+            // If the robot is in Field-Centric Mode, the robot will NOT have a head (meaning that the robot's controls WILL NOT change based off the direction it is facing). What direction is forward can be done be resetting the yaw angle to 0 degrees (through pressing gamepad.back).
             if (isFieldCentric) {
 
                 // Calculate motor powers using mecanum drive kinematics
@@ -208,7 +222,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 telemetry.addData("Back Right Power", backRightPower); // Displays power of the back right mecanum wheel
             }
 
-            // If the robot is in Robot-Centric Mode, the robot will WILL have a head (meaning that the robot's controls WILL change based off the direction it is facing). You can still reset the yaw angle to 0 degrees (through pressing the back button) in Robot-Centric, then switch to Field-Centric mode (via the left joystick button) and be able to use that yaw angle.
+            // If the robot is in Robot-Centric Mode, the robot will WILL have a head (meaning that the robot's controls WILL change based off the direction it is facing). You can still reset the yaw angle to 0 degrees (through gamepad1.back ) in Robot-Centric, then switch to Field-Centric mode (via the left joystick button) and be able to use that yaw angle.
             else {
                 // Calculate motor powers using mecanum drive kinematics
                 double frontLeftPower = (forward + sideways + rotation) * ltSpeed;
@@ -228,9 +242,10 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 telemetry.addData("Front Right Power", frontRightPower); // Displays power of the front right  mecanum wheel
                 telemetry.addData("Back Right Power", backRightPower); // Displays power of the back right mecanum wheel
             }
-            telemetry.addData("Speed", ltSpeed); // Displays speed of robot mecanum wheel movement using left trigger (between 0.15 and 1)
+            telemetry.addData("Speed (Left Trigger)", ltSpeed); // Displays speed of robot mecanum wheel movement using left trigger (between 0.15 and 1)
             telemetry.addData("ViperSlide Position", motorViperSlide.getCurrentPosition());  // Displays motorViperSlide encoder position
             telemetry.addData("ViperSlide Mode", motorViperSlide.getMode()); // Displays motorViperSlide mode
+            telemetry.addData("Last button pressed", last_button); // Displays the last gamepad 1 press/call (excluding joystick movement)
             telemetry.update(); // Adds telemetry to REV Driver Hub
         }
     }
