@@ -147,7 +147,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 last_button = "dPad - down"; // Sets last button to "dPad - down"
 
                 // When the up dpad is pressed, the viper slide motor will move up using encoders
-            } else if (gamepad1.dpad_up && motorViperSlide.getCurrentPosition() > -4400) { // Checks if the motor is nearly at the top to make sure it cannot run past it
+            } else if (gamepad1.dpad_up && motorViperSlide.getCurrentPosition() > -4300) { // Checks if the motor is nearly at the top to make sure it cannot run past it
                 previousGamepadButton = (motorViperSlide.getCurrentPosition() - 100);
                 motorViperSlideSpeed = -0.4;
                 last_button = "dPad - up"; // Sets last button to "dPad - up"
