@@ -24,6 +24,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
     - Note that these buttons use the speed of motorViperSlideSpeed (0.8, or 80% speed) or -motorViperSlideSpeed (-0.8, or -80% speed) to move.
 
     - Added brake using `motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);`
+    - Set viper slide motor tolerance to 50 (since it uses imperfect encoders).
 
 - Modified all of the controller code to change it from Xbox controllers to our controller, the [Logitech F310](https://www.amazon.com/Logitech-940-000110-Gamepad-F310/dp/B003VAHYQY/ref=sr_1_1?keywords=logitech+f310&qid=1691515991&sr=8-1).
 
