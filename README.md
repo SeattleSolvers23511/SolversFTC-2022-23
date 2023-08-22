@@ -13,6 +13,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
 
     - Up Button on dPad moves viper slide motor (motorViperSlide) counterclockwise (up) at the speed of motorViperSlideSpeed (which is set to 0.8, or 80% speed).
     - Down Button on dPad moves viper slide motor (motorViperSlide) clockwise (down) at the speed of -motorViperSlideSpeed (which is set to 0.8, or 80% speed)
+    - Right Bumper moves Viper slide motor (motorViperSlide) clockwise (down) PAST ALL LIMITS. THIS IS ONLY TO BE USED IN EMERGENCY PURPOSES IN CASE IF THE VIPER SLIDE ENCODER TICK VALUE IS RESET AT THE WRONG PLACE. 
 
       - While using dPad buttons, you can only move up if the encoder tick value is greater than `-4400` (which is negative since for our viper slide motor, moving it counterclockwise moves it up), which prevents it from moving past its limits and possibly damaging the motor. In addition, you can only move down if the encoder tick value is less than `0`, which prevents it from moving too far down.
 
