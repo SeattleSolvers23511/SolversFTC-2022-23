@@ -24,7 +24,7 @@ public class test extends LinearOpMode {
     DcMotorEx motorLeftViperSlide;
     DcMotorEx motorRightViperSlide;
 
-    // Creates IMU that is set to imu.
+    // Creates IMU variable that is set to imu.
     IMU imu;
 
     String last_button = ""; // Variable that stores the last gamepad1 press/call, which is displayed on REV control hub using telemetry.addData();
