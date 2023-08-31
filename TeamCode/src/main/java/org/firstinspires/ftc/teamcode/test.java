@@ -94,7 +94,7 @@ public class test extends LinearOpMode {
         telemetry.addData("Mode", "Field-Centric"); // Since the default mode is Field-Centric, sets Field-Centric to be the mode that is added to REV Driver Hub.
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY).
+        // Wait for the game to start (driver pressexs PLAY).
         waitForStart();
 
         // Resets imu at the start of code.
