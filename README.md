@@ -13,7 +13,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
 
     - Up Button on dPad moves viper slide motor (motorViperSlide) counterclockwise (up) at the speed of motorViperSlideSpeed / 2 (which is 0.4, or 40% speed).
     - Down Button on dPad moves viper slide motor (motorViperSlide) clockwise (down) at the speed of -motorViperSlideSpeed (which is set to 0.4, or 40% speed)
-    - Right Bumper moves Viper slide motor (motorViperSlide) clockwise (down) past the speed of -motorViperSlideSpeed (which is 0.4, or 40% speed) PAST ALL LIMITS. THIS IS ONLY TO BE USED IN EMERGENCY PURPOSES IN CASE IF THE VIPER SLIDE ENCODER TICK VALUE IS RESET AT THE WRONG PLACE. 
+    - Right Trigger moves Viper slide motor (motorViperSlide) clockwise (down) past the speed of -motorViperSlideSpeed (which is 0.4, or 40% speed) PAST ALL LIMITS. THIS IS ONLY TO BE USED IN EMERGENCY PURPOSES IN CASE IF THE VIPER SLIDE ENCODER TICK VALUE IS RESET AT THE WRONG PLACE. 
 
       - While using dPad buttons, you can only move up if the encoder tick value is greater than `-4300` (which is negative since for our viper slide motor, moving it counterclockwise moves it up), which prevents it from moving past its limits and possibly damaging the motor. In addition, you can only move down if the encoder tick value is less than `0`, which prevents it from moving too far down.
 
@@ -28,14 +28,17 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
 
 - Modified all of the controller code to change it from Xbox controllers to our controller, the [Logitech F310](https://www.amazon.com/Logitech-940-000110-Gamepad-F310/dp/B003VAHYQY/ref=sr_1_1?keywords=logitech+f310&qid=1691515991&sr=8-1).
 
+- Added claw control
+	- Left Bumper Opens Claw
+   	- Right Bumper Closes Claw
+  	- Their position will be kept even after the robot is turned off and on (meaning that the left bumper and right claw will still work if the claws are desynchronized and synchronize them)
+
 ## Download Process for Android Studio
 
+- The download process for Windows/non-linux OS can be a little tricky if you are not using [GitHub Desktop](https://desktop.github.com/). If you are not using Windows, then you can skip this section.
 - Once you have [downloaded the code](https://github.com/FTC-23511/SolversFTC-2022-23/archive/refs/heads/code.zip), extract it to your preferred folder (such as Downloads) since it is in `.zip`.
 - Then, open it in Android Studio. The folder will be called `SolversFTC-2022-23-code`.
 - MAKE SURE TO OPEN THE FOLDER INSIDE `SolversFTC-2022-23-code` (which is also called `SolversFTC-2022-23-code`).
-
-![Android Studio Screenshot](https://private-user-images.githubusercontent.com/112827565/261127615-4baf5d16-a634-4f49-b8e4-b22f2c91528a.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE2OTIyMTc5NzUsIm5iZiI6MTY5MjIxNzY3NSwicGF0aCI6Ii8xMTI4Mjc1NjUvMjYxMTI3NjE1LTRiYWY1ZDE2LWE2MzQtNGY0OS1iOGU0LWIyMmYyYzkxNTI4YS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBSVdOSllBWDRDU1ZFSDUzQSUyRjIwMjMwODE2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDIzMDgxNlQyMDI3NTVaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1lYzIxMzgzM2NhZTBjZTNiYzE4OWFiMTE2ZjFhODdlNDQyNWJhOTg0ZGIxNzM0ZTZjNWYzOTYzZGRkYTVhN2YxJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.khZTrv1pqKKAHG9a27sCPR40nXqtSupz2QDfHW3v0ws)
-
 - The path name should look something like this (assuming you extracted the .zip folder to your Downloads folder): `C:\Users\user_name\Downloads\SolversFTC-2022-23-code\SolversFTC-2022-23-code`
 
   - Make sure to replace user_name with your account's actual name of user
