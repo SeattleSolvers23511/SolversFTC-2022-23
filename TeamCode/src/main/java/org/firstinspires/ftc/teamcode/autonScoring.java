@@ -56,7 +56,6 @@ public class autonScoring extends LinearOpMode{
         motorRightViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorLeftViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
-
         waitForStart();
         imu.resetYaw();
         if (isStopRequested()) return;
@@ -71,8 +70,6 @@ public class autonScoring extends LinearOpMode{
         } else if (b==3){
             largeJunction();
         }
-
-
     }
 
     private void largeJunction() {

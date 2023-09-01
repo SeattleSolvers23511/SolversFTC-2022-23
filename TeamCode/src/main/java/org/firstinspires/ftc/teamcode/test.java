@@ -64,9 +64,9 @@ public class test extends LinearOpMode {
         motorRightViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorLeftViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
-        // Sets Viper Slide motor tolerance to 50 (since it uses encoders).
-        motorRightViperSlide.setTargetPositionTolerance(50);
-        motorLeftViperSlide.setTargetPositionTolerance(50);
+        // Sets Viper Slide motor tolerance to 100 (since it uses encoders).
+        motorRightViperSlide.setTargetPositionTolerance(100);
+        motorLeftViperSlide.setTargetPositionTolerance(100);
 
         // Reverse the right side motors since we are using mecanum wheels.
         // Reverse left motors if you are using NeveRests.
@@ -94,7 +94,7 @@ public class test extends LinearOpMode {
         telemetry.addData("Mode", "Field-Centric"); // Since the default mode is Field-Centric, sets Field-Centric to be the mode that is added to REV Driver Hub.
         telemetry.update();
 
-        // Wait for the game to start (driver pressexs PLAY).
+        // Wait for the game to start (driver presses PLAY).
         waitForStart();
 
         // Resets imu at the start of code.
@@ -134,29 +134,37 @@ public class test extends LinearOpMode {
             int large_pole = -4087; // The encoder position for the large pole.
             // Note that all encoder positions are negative because moving the vipers slides counterclockwise moves the slide up.
 
-            // Controls for vipers slide using presets.
+            // Controls for vipers slide using presets. It will close the claw, and then move up (since it could hit the camera if the claw is open and the viper slide is moved up.)
             // When the "a" button is pressed, the viper slide motor will move to the bottom (0) using encoders.
             if (gamepad1.a) {
                 previousGamepadButton = 0;
                 motorViperSlideSpeed = 0.8;
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw (remember, the direction has been reversed).
                 last_button = "a"; // Sets last button to "a".
 
                 // When the "x" button is pressed, the viper slide motor will move to the small pole position using encoders.
             } else if (gamepad1.x) {
                 previousGamepadButton = small_pole;
                 motorViperSlideSpeed = 0.8;
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw (remember, the direction has been reversed).
                 last_button = "x"; // Sets last button to "x".
 
                 // When the "y" button is pressed, the viper slide motor will move to the medium pole position using encoders.
             } else if (gamepad1.y) {
                 previousGamepadButton = medium_pole;
                 motorViperSlideSpeed = 0.8;
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw (remember, the direction has been reversed).
                 last_button = "y"; // Sets last button to "y".
 
                 // When the "b" button is pressed, the viper slide motor will move to the large pole position using encoders.
             } else if (gamepad1.b) {
                 previousGamepadButton = large_pole;
                 motorViperSlideSpeed = 0.8;
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw (remember, the direction has been reversed).
                 last_button = "b"; // Sets last button to "b".
 
                 // Control motorViperSlide without using presets.
@@ -164,13 +172,13 @@ public class test extends LinearOpMode {
             } else if (gamepad1.dpad_down && motorRightViperSlide.getCurrentPosition() < 0) { // Checks if the motor is at the bottom to make sure it cannot run past it.
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.1;
-                last_button = "dPad - down"; // Sets last button to "dPad - down".
+                last_button = "dpad_down"; // Sets last button to "dPad - down".
 
                 // When the up dpad is pressed, the viper slide motor will move up using encoders.
             } else if (gamepad1.dpad_up && motorRightViperSlide.getCurrentPosition() > -4300) { // Checks if the motor is nearly at the top to make sure it cannot run past it.
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() - 100);
                 motorViperSlideSpeed = -0.1;
-                last_button = "dPad - up"; // Sets last button to "dPad - up".
+                last_button = "dpad_up"; // Sets last button to "dPad - up".
 
                 // When the right trigger is pressed, the viper slide motor will move down using encoders at a fixed speed.
                 // It can move higher past viper slide encoder value 0 (positive numbers).
@@ -178,19 +186,19 @@ public class test extends LinearOpMode {
             } else if (gamepad1.right_trigger > 0) {
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.4;
-                last_button = "right trigger"; // Sets last button to "right bumper".
+                last_button = "right_trigger"; // Sets last button to "right bumper".
 
                 // When the left bumper is pressed, the claw will open.
             } else if (gamepad1.left_bumper) {
                 servoLeftClaw.setPosition(0.3); // Opens Left Claw.
                 servoRightClaw.setPosition(0.62); // Opens Right Claw (remember, the direction has been reversed).
-                last_button = "right bumper"; // Sets last button to "left bumper".
+                last_button = "left_bumper"; // Sets last button to "left bumper".
 
                 // When the right bumper is pressed, the claw will close.
             } else if (gamepad1.right_bumper) {
-                servoLeftClaw.setPosition(0.415); // Opens Left Claw.
-                servoRightClaw.setPosition(0.735); // Opens Right Claw (remember, the direction has been reversed).
-                last_button = "left bumper"; // Sets last button to "right bumper".
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw (remember, the direction has been reversed).
+                last_button = "right_bumper"; // Sets last button to "right bumper".
             }
 
             motorRightViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
@@ -200,6 +208,11 @@ public class test extends LinearOpMode {
             motorLeftViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
             motorLeftViperSlide.setTargetPosition(previousGamepadButton); // Sets target position to the last gamepad button pressed.
             motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position 0 while the "a" button is pressed and held down.
+
+            // Sets viper slide speed to 0 when it is very close to its position that it needs to go to
+            if (motorRightViperSlide.getCurrentPosition() + 50 > previousGamepadButton && motorRightViperSlide.getCurrentPosition() - 50  < previousGamepadButton) {
+                motorViperSlideSpeed = 0;
+            }
 
             // Creates three variables that are used for the Mecanum wheel calculations for Robot-Centric Mode.
             double forward, sideways, rotation;
@@ -245,11 +258,11 @@ public class test extends LinearOpMode {
                 double frontRightPower = (rotY - rotX - rotation) / denominator * ltSpeed;
                 double backRightPower = (rotY + rotX - rotation) / denominator * ltSpeed;
 
-                // Set motor powers.
-                motorFrontLeft.setPower(frontLeftPower);
-                motorBackLeft.setPower(backLeftPower);
-                motorFrontRight.setPower(frontRightPower);
-                motorBackRight.setPower(backRightPower);
+                // Set motor powers (inverted since our drivers wanted the direction that the claw is facing to be front)
+                motorFrontLeft.setPower(-frontLeftPower);
+                motorBackLeft.setPower(-backLeftPower);
+                motorFrontRight.setPower(-frontRightPower);
+                motorBackRight.setPower(-backRightPower);
 
                 // Display motorViperSlide encoder position.
                 telemetry.addData("Mode:", "Field-Centric"); // Displays current mode (Field-Centric).
@@ -267,11 +280,11 @@ public class test extends LinearOpMode {
                 double backLeftPower = (forward - sideways + rotation) * ltSpeed;
                 double backRightPower = (forward + sideways - rotation) * ltSpeed;
 
-                // Set motor powers.
-                motorFrontLeft.setPower(frontLeftPower);
-                motorBackLeft.setPower(backLeftPower);
-                motorFrontRight.setPower(frontRightPower);
-                motorBackRight.setPower(backRightPower);
+                // Set motor powers (inverted since our drivers wanted the direction that the claw is facing to be front)
+                motorFrontLeft.setPower(-frontLeftPower);
+                motorBackLeft.setPower(-backLeftPower);
+                motorFrontRight.setPower(-frontRightPower);
+                motorBackRight.setPower(-backRightPower);
 
                 telemetry.addData("Mode:", "Robot-Centric"); // Displays current mode (Robot-Centric).
                 telemetry.addData("Front Left Power", frontLeftPower); // Displays power of the front left mecanum wheel.
