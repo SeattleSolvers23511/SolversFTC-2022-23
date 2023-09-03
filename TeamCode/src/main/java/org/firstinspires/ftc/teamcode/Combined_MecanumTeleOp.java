@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @TeleOp // Without this, this file will not show in the TeleOp section of the REV Driver Hub.
 // Note that REV Driver Hub and REV Driver Station are synonymous.
 public class Combined_MecanumTeleOp extends LinearOpMode {
-    double accelerationFactor = 0.15; // Sets the default speed to 15% (0.15).
+    double accelerationFactor = 0.15; // Sets the default movement speed to 15% (0.15).
 
     // Defines 4 Mecanum Wheel Motors, and then the Viper Slide Motor.
     DcMotor motorFrontLeft;
@@ -34,7 +34,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // Declares our motors using ID's that match the configuration on the REV Control Hub.
+        // Declares motors using ID's that match the configuration on the REV Control Hub.
         motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft"); // Front Left Motor.
         motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft"); // Back Left Motor.
         motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight"); // Front Right Motor.
@@ -42,6 +42,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
         motorLeftViperSlide = hardwareMap.get(DcMotorEx.class, "motorLeftViperSlide"); // Viper Slide Motor.
         motorRightViperSlide = hardwareMap.get(DcMotorEx.class, "motorRightViperSlide"); // Viper Slide Motor.
 
+        // Declares servos using ID's that match the configuration on the REV Control Hub.
         Servo servoLeftClaw = hardwareMap.get(Servo.class, "servoLeftClaw");
         Servo servoRightClaw = hardwareMap.get(Servo.class, "servoRightClaw");
 
@@ -66,6 +67,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
         motorLeftViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
 
         // Sets Viper Slide motor tolerance to 100 (since it uses encoders).
+        // This is a fail-safe in case the viper slide is not able to move to its exact encoder value that it needs to go to.
         motorRightViperSlide.setTargetPositionTolerance(100);
         motorLeftViperSlide.setTargetPositionTolerance(100);
 
@@ -74,32 +76,28 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // Retrieves the IMU from the hardware map.
-        imu = hardwareMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(IMU.class, "imu"); // Retrieves the IMU from the hardware map.
 
         // Adjusts the orientation parameters to match the robot (note that IMU is set to imu).
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward.
-        imu.initialize(parameters);
+        imu.initialize(parameters); // Without this, the REV Hub's orientation is assumed to be logo up / USB forward.
 
-        // Variable that stores the speed of the viper slide motor, modify based on what works best for your robot.
-        double motorViperSlideSpeed = 0.4;
+        double motorViperSlideSpeed = 0.4; // Variable that stores the speed of the viper slide motor, modify based on what works best for your robot.
 
-        int previousGamepadButton = 0;
+        int newViperSlidePosition = 0; // Variable that stores the encoder tick of where the viper slides need to go to.
+        // It updates whenever a gamepad button that affects the viper slides is pressed.
 
         // Adds telemetry to the Driver Station.
         telemetry.addData("Status", "Initialized"); // Adds Initialized Status.
         telemetry.addData("Mode", "Field-Centric"); // Since the default mode is Field-Centric, sets Field-Centric to be the mode that is added to REV Driver Hub.
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY).
-        waitForStart();
+        waitForStart(); // Wait for the game to start (driver presses PLAY).
 
-        // Resets imu at the start of code.
-        imu.resetYaw();
+        imu.resetYaw(); // Resets imu at the start of code.
 
         // Run until the end of the match (driver presses STOP).
         if (isStopRequested()) return;
@@ -139,7 +137,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             if (gamepad1.a) {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
-                previousGamepadButton = 0;
+                newViperSlidePosition = 0;
                 motorViperSlideSpeed = 0.4;
                 last_button = "a"; // Sets last button to "a".
 
@@ -147,7 +145,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.x) {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
-                previousGamepadButton = small_pole;
+                newViperSlidePosition = small_pole;
                 motorViperSlideSpeed = 0.4;
                 last_button = "x"; // Sets last button to "x".
 
@@ -155,7 +153,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.y) {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
-                previousGamepadButton = medium_pole;
+                newViperSlidePosition = medium_pole;
                 motorViperSlideSpeed = 0.4;
                 last_button = "y"; // Sets last button to "y".
 
@@ -163,7 +161,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.b) {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
-                previousGamepadButton = large_pole;
+                newViperSlidePosition = large_pole;
                 motorViperSlideSpeed = 0.4;
                 last_button = "b"; // Sets last button to "b".
 
@@ -172,7 +170,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.dpad_down && motorRightViperSlide.getCurrentPosition() < 0) { // Checks if the motor is at the bottom to make sure it cannot run past it.
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
-                previousGamepadButton = (motorRightViperSlide.getCurrentPosition() + 100);
+                newViperSlidePosition = (motorRightViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.4;
                 last_button = "dPad - down"; // Sets last button to "dPad - down".
 
@@ -180,7 +178,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.dpad_up && motorRightViperSlide.getCurrentPosition() > -4300) { // Checks if the motor is nearly at the top to make sure it cannot run past it.
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
-                previousGamepadButton = (motorRightViperSlide.getCurrentPosition() - 100);
+                newViperSlidePosition = (motorRightViperSlide.getCurrentPosition() - 100);
                 motorViperSlideSpeed = -0.4;
                 last_button = "dPad - up"; // Sets last button to "dPad - up".
 
@@ -190,7 +188,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             } else if (gamepad1.right_trigger > 0) {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
-                previousGamepadButton = (motorRightViperSlide.getCurrentPosition() + 100);
+                newViperSlidePosition = (motorRightViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.4;
                 last_button = "right trigger"; // Sets last button to "right bumper".
 
@@ -207,15 +205,17 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 last_button = "left bumper"; // Sets last button to "right bumper".
             }
 
-            motorRightViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
-            motorRightViperSlide.setTargetPosition(previousGamepadButton); // Sets target position to the last gamepad button pressed.
-            motorRightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position 0 while the "a" button is pressed and held down.
+            // Moves Right Viper Slide
+            motorRightViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which the right viper slide will run at.
+            motorRightViperSlide.setTargetPosition(newViperSlidePosition); // This sets the target position of the right viper slide to newViperSlidePosition.
+            motorRightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the right viper slide motor to move to the value of newViperSlidePosition.
 
-            motorLeftViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which motorViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); will run at.
-            motorLeftViperSlide.setTargetPosition(previousGamepadButton); // Sets target position to the last gamepad button pressed.
-            motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This causes the motor to start moving to encoder position 0 while the "a" button is pressed and held down.
+            // Moves Left Viper Slide
+            motorLeftViperSlide.setPower(motorViperSlideSpeed); // This sets the speed at which the left viper slide will run at.
+            motorLeftViperSlide.setTargetPosition(newViperSlidePosition); // This sets the target position of the right viper slide to newViperSlidePosition.
+            motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This moves the left viper slide motors to move to the value of newViperSlidePosition.
 
-            // Creates three variables that are used for the Mecanum wheel calculations for Robot-Centric Mode.
+            // Creates three variables that are used for the Mecanum wheel calculations.
             double forward, sideways, rotation;
 
             // Convert the raw x and y values to robot-centric forward and sideways velocities for easier understanding.
@@ -234,7 +234,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 last_button = "back"; // Sets last button to "back".
             }
 
-            // Resets encoder value of viper slide motor to 0 when the right joystick button is pressed. Can be used in both Field-Centric and Robot-Centric mode.
+            // Resets encoder value of viper slide motor to 0 when the right joystick button is pressed.
+            // Can be used in both Field-Centric and Robot-Centric mode.
             if (gamepad1.right_stick_button) {
                 motorRightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorLeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -278,6 +279,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             // You can still reset the yaw angle to 0 by using the back button in Robot-Centric mode.
             else {
                 // Calculate motor powers using mecanum drive kinematics.
+                // No denominator is needed here in Robot-Centric Mode.
                 double frontLeftPower = (forward + sideways + rotation) * ltSpeed;
                 double frontRightPower = (forward - sideways - rotation) * ltSpeed;
                 double backLeftPower = (forward - sideways + rotation) * ltSpeed;
