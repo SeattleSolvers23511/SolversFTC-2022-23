@@ -86,7 +86,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
         imu.initialize(parameters);
 
         // Variable that stores the speed of the viper slide motor, modify based on what works best for your robot.
-        double motorViperSlideSpeed = 0.8;
+        double motorViperSlideSpeed = 0.4;
 
         int previousGamepadButton = 0;
 
@@ -140,7 +140,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = 0;
-                motorViperSlideSpeed = 0.8;
+                motorViperSlideSpeed = 0.4;
                 last_button = "a"; // Sets last button to "a".
 
                 // When the "x" button is pressed, the viper slide motor will move to the small pole position using encoders.
@@ -148,7 +148,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = small_pole;
-                motorViperSlideSpeed = 0.8;
+                motorViperSlideSpeed = 0.4;
                 last_button = "x"; // Sets last button to "x".
 
                 // When the "y" button is pressed, the viper slide motor will move to the medium pole position using encoders.
@@ -156,7 +156,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = medium_pole;
-                motorViperSlideSpeed = 0.8;
+                motorViperSlideSpeed = 0.4;
                 last_button = "y"; // Sets last button to "y".
 
                 // When the "b" button is pressed, the viper slide motor will move to the large pole position using encoders.
@@ -164,7 +164,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = large_pole;
-                motorViperSlideSpeed = 0.8;
+                motorViperSlideSpeed = 0.4;
                 last_button = "b"; // Sets last button to "b".
 
                 // Control motorViperSlide without using presets.
@@ -173,7 +173,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() + 100);
-                motorViperSlideSpeed = 0.1;
+                motorViperSlideSpeed = 0.4;
                 last_button = "dPad - down"; // Sets last button to "dPad - down".
 
                 // When the up dpad is pressed, the viper slide motor will move up using encoders.
@@ -181,7 +181,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
                 servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() - 100);
-                motorViperSlideSpeed = -0.1;
+                motorViperSlideSpeed = -0.4;
                 last_button = "dPad - up"; // Sets last button to "dPad - up".
 
                 // When the right trigger is pressed, the viper slide motor will move down using encoders at a fixed speed.
