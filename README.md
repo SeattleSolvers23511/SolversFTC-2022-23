@@ -2,29 +2,36 @@
 
 This repository contains the public FTC SDK for the POWERPLAY (2022-2023) competition season for the FTC Team #23511, [Seattle Solvers](seattlesolvers.com).
 
-## Code Modifications
+## TeleOp Code Modifications
 
 It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Kit](https://www.gobilda.com/strafer-chassis-kit-v5/), which uses a mecanum drivetrain. This code was originated from [Game Manual 0's Mecanum Drivetrain Turorial](https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html), and then modified to our needs. All code is in [Java](https://www.java.com/en/).
 
-- Updated the [Field_Centric_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Field_Centric_MecanumTeleOp.java) & [Robot_Centric_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Robot_Centric_MecanumTeleOp.java) Java files to now reset the Yaw Angle of robot to 0 with the press of the back button, added brakes to wheels, and added code that allows the robot to move faster based on how hard the Left Trigger (LT) is pushed/pressed (when not pressed, the default speed is 0.15 or 15% speed, when fully pressed, the speed is increased to 1 or 100%).
+- Updated the [Field_Centric_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Field_Centric_MecanumTeleOp.java) & [Robot_Centric_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Robot_Centric_MecanumTeleOp.java) (the base gm0 Mecanum Drivetrain TeleOp code) Java files to now reset the Yaw Angle (IMU) of robot to 0 with the press of the back button, added brakes to wheels, and added code that allows the robot to move faster based on how hard the Left Trigger (LT) is pushed/pressed (when not pressed, the default speed is `0.15` or `15%` speed, when fully pressed, the speed is increased to `1` or `100%`).
 - Added [Combined_MecanumTeleOp.java](https://github.com/FTC-23511/SolversFTC-2022-23/blob/code/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Combined_MecanumTeleOp.java), which switches between Field Centric Mode and Robot Centric mode. The toggle to switch them is the Left Joystick Button.
 
-  - Added control for the viper slide:
+  - This file uses `RUN_USING_ENCODERS` and `ZeroPowerBehavior.BRAKE`. 
 
-    - Up Button on dPad moves viper slide motor (motorViperSlide) counterclockwise (up) at the speed of motorViperSlideSpeed / 2 (which is 0.4, or 40% speed).
-    - Down Button on dPad moves viper slide motor (motorViperSlide) clockwise (down) at the speed of -motorViperSlideSpeed (which is set to 0.4, or 40% speed)
-    - Right Bumper moves Viper slide motor (motorViperSlide) clockwise (down) past the speed of -motorViperSlideSpeed (which is 0.4, or 40% speed) PAST ALL LIMITS. THIS IS ONLY TO BE USED IN EMERGENCY PURPOSES IN CASE IF THE VIPER SLIDE ENCODER TICK VALUE IS RESET AT THE WRONG PLACE. 
+  - Added control for the claw:
+	- Left Bumper opens claw
+    	- Right Bumper opens claw
+        
+  - Added control for the viper slides (`motorLeftViperSlide` & `motorRightViperSlide`):
+
+    - Due to the fact that if the claw is opened and the viper slide is moving, it can hit the camera  As a result, moving the gamepad through any gamepad button first forces the claw to be closed.
+
+    - Up Button on dPad moves both viper slide motors counterclockwise (up) at the speed of `motorViperSlideSpeed` (which is `0.4`, or `40%` speed).
+    - Down Button on dPad moves both viper slide motors clockwise (down) at the speed of `-motorViperSlideSpeed`
+    - Right Bumper moves both viper slide motors clockwise (down) past the speed of `-motorViperSlideSpeed` PAST ALL LIMITS. THIS IS ONLY TO BE USED IN EMERGENCY PURPOSES IN CASE IF THE VIPER SLIDE ENCODER TICK VALUE IS RESET to 0 AT THE WRONG PLACE. 
 
       - While using dPad buttons, you can only move up if the encoder tick value is greater than `-4300` (which is negative since for our viper slide motor, moving it counterclockwise moves it up), which prevents it from moving past its limits and possibly damaging the motor. In addition, you can only move down if the encoder tick value is less than `0`, which prevents it from moving too far down.
 
-    - While button "a" is held down, the viper slide will move down until the encoder tick is 0 (to get it to the ground).
-    - While button "x" is held down, the viper slide will move up or down until the encoder tick is -1710 (for small pole).
-    - While button "y" is held down, the viper slide will move up or down until the encoder tick is -2719 (for medium pole).
-    - While button "b" is held down, the viper slide will move up or down until the encoder tick is -4087 (for large pole).
-    - Note that these buttons use the speed of motorViperSlideSpeed (0.8, or 80% speed) or -motorViperSlideSpeed (-0.8, or -80% speed) to move.
-
-    - Added brake using `motorViperSlide.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);`
-    - Set viper slide motor tolerance to 50 (since it uses imperfect encoders).
+    - While button "a" is held down, the viper slide will move down until the encoder tick is `0` (to get it to the ground).
+    - While button "x" is held down, the viper slide will move up or down until the encoder tick is `-1710` (for small pole).
+    - While button "y" is held down, the viper slide will move up or down until the encoder tick is `-2719` (for medium pole).
+    - While button "b" is held down, the viper slide will move up or down until the encoder tick is `-4087` (for large pole).
+    - Note that these buttons use the speed of `motorViperSlideSpeed` (`0.4, or 40% speed`) or `-motorViperSlideSpeed` (`-0.4, or -40% speed`) to move, and that the encoder tick count is subject to change based off the claw mount & design.
+    
+    - Set viper slide motor tolerance to `100` (since it uses imperfect encoders).
 
 - Modified all of the controller code to change it from Xbox controllers to our controller, the [Logitech F310](https://www.amazon.com/Logitech-940-000110-Gamepad-F310/dp/B003VAHYQY/ref=sr_1_1?keywords=logitech+f310&qid=1691515991&sr=8-1).
 
@@ -34,9 +41,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
 - Then, open it in Android Studio. The folder will be called `SolversFTC-2022-23-code`.
 - MAKE SURE TO OPEN THE FOLDER INSIDE `SolversFTC-2022-23-code` (which is also called `SolversFTC-2022-23-code`).
 
-![Android Studio Screenshot](https://private-user-images.githubusercontent.com/112827565/261127615-4baf5d16-a634-4f49-b8e4-b22f2c91528a.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE2OTIyMTc5NzUsIm5iZiI6MTY5MjIxNzY3NSwicGF0aCI6Ii8xMTI4Mjc1NjUvMjYxMTI3NjE1LTRiYWY1ZDE2LWE2MzQtNGY0OS1iOGU0LWIyMmYyYzkxNTI4YS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBSVdOSllBWDRDU1ZFSDUzQSUyRjIwMjMwODE2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDIzMDgxNlQyMDI3NTVaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1lYzIxMzgzM2NhZTBjZTNiYzE4OWFiMTE2ZjFhODdlNDQyNWJhOTg0ZGIxNzM0ZTZjNWYzOTYzZGRkYTVhN2YxJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.khZTrv1pqKKAHG9a27sCPR40nXqtSupz2QDfHW3v0ws)
-
-- The path name should look something like this (assuming you extracted the .zip folder to your Downloads folder): `C:\Users\user_name\Downloads\SolversFTC-2022-23-code\SolversFTC-2022-23-code`
+- The path name should look something like this (assuming you extracted the .zip folder to your Downloads folder on Windows): `C:\Users\user_name\Downloads\SolversFTC-2022-23-code\SolversFTC-2022-23-code`
 
   - Make sure to replace user_name with your account's actual name of user
 
