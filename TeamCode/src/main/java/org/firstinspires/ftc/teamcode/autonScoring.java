@@ -1,21 +1,14 @@
 // Please note, no RoadRunner has been implemented into this Auton so far.
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.ftccommon.internal.manualcontrol.commands.ServoCommands;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @Autonomous(name = "Picking up cones and scoring auton")
 
 public class autonScoring extends LinearOpMode{
@@ -128,8 +121,7 @@ public class autonScoring extends LinearOpMode{
             motorRightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        }
-        else if (coneNumber == 2){
+        } else if (coneNumber == 2){
             conePosition = -200;
             motorLeftViperSlide.setPower(0.8);
             motorRightViperSlide.setPower(0.8);
@@ -146,8 +138,8 @@ public class autonScoring extends LinearOpMode{
             motorLeftViperSlide.setTargetPosition(conePosition);
             motorRightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        else if (coneNumber == 3){
+
+        } else if (coneNumber == 3){
             conePosition = -300;
             motorLeftViperSlide.setPower(0.8);
             motorRightViperSlide.setPower(0.8);
@@ -164,8 +156,8 @@ public class autonScoring extends LinearOpMode{
             motorLeftViperSlide.setTargetPosition(conePosition);
             motorRightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        else if (coneNumber == 4){
+
+        } else if (coneNumber == 4){
             conePosition = -400;
             motorLeftViperSlide.setPower(0.8);
             motorRightViperSlide.setPower(0.8);
@@ -182,8 +174,8 @@ public class autonScoring extends LinearOpMode{
             motorLeftViperSlide.setTargetPosition(conePosition);
             motorRightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        else if (coneNumber == 5){
+
+        } else if (coneNumber == 5){
             conePosition = -500;
             motorLeftViperSlide.setPower(0.8);
             motorRightViperSlide.setPower(0.8);
