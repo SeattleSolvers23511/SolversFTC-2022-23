@@ -12,8 +12,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
   - This file uses `RUN_USING_ENCODERS` and `ZeroPowerBehavior.BRAKE`. 
 
   - Added control for the claw:
-	- Left Bumper opens claw
-    	- Right Bumper opens claw
+	- Left Bumper opens claw, Right Bumper closes claw
         
   - Added control for the viper slides (`motorLeftViperSlide` & `motorRightViperSlide`):
 
