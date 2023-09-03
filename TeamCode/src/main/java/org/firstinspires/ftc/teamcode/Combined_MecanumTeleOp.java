@@ -11,10 +11,9 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@TeleOp // Without this, this file will not show in the TeleOp section of the REV Driver Hub. Note that REV Driver Hub and REV Driver Station are synonymous.
+@TeleOp // Without this, this file will not show in the TeleOp section of the REV Driver Hub.
+// Note that REV Driver Hub and REV Driver Station are synonymous.
 public class Combined_MecanumTeleOp extends LinearOpMode {
     double accelerationFactor = 0.15; // Sets the default speed to 15% (0.15).
 
@@ -25,9 +24,6 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
     DcMotor motorBackRight;
     DcMotorEx motorLeftViperSlide;
     DcMotorEx motorRightViperSlide;
-
-    private Servo servoLeftClaw;
-    private Servo servoRightClaw;
 
     // Creates IMU that is set to imu.
     IMU imu;
@@ -46,8 +42,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
         motorLeftViperSlide = hardwareMap.get(DcMotorEx.class, "motorLeftViperSlide"); // Viper Slide Motor.
         motorRightViperSlide = hardwareMap.get(DcMotorEx.class, "motorRightViperSlide"); // Viper Slide Motor.
 
-        servoLeftClaw = hardwareMap.get(Servo.class, "servoLeftClaw");
-        servoRightClaw = hardwareMap.get(Servo.class, "servoRightClaw");
+        Servo servoLeftClaw = hardwareMap.get(Servo.class, "servoLeftClaw");
+        Servo servoRightClaw = hardwareMap.get(Servo.class, "servoRightClaw");
 
         // Sets all motors to use encoders.
         motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -137,6 +133,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             // Note that all encoder positions are negative because moving the vipers slide counterclockwise moves the slide up.
 
             // Controls for vipers slide using presets.
+            // Due to the fact that if the claw is opened and the viper slide is moving, it can hit the camera.
+            // As a result, moving the gamepad through any gamepad button first forces the claw to be closed.
             // When the "a" button is pressed, the viper slide motor will move to the bottom (0) using encoders.
             if (gamepad1.a) {
                 servoLeftClaw.setPosition(0.415); // Closes Left Claw.
@@ -172,12 +170,16 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 // Control motorViperSlide without using presets.
                 // When the down dpad is pressed, the viper slide motor will move down using encoders.
             } else if (gamepad1.dpad_down && motorRightViperSlide.getCurrentPosition() < 0) { // Checks if the motor is at the bottom to make sure it cannot run past it.
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.1;
                 last_button = "dPad - down"; // Sets last button to "dPad - down".
 
                 // When the up dpad is pressed, the viper slide motor will move up using encoders.
             } else if (gamepad1.dpad_up && motorRightViperSlide.getCurrentPosition() > -4300) { // Checks if the motor is nearly at the top to make sure it cannot run past it.
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() - 100);
                 motorViperSlideSpeed = -0.1;
                 last_button = "dPad - up"; // Sets last button to "dPad - up".
@@ -186,6 +188,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 // It can move higher past viper slide encoder value 0 (positive numbers).
                 // THIS IS A FAIL SAFE ONLY IN CASE THE ENCODER VALUE IS RESET TO 0 IN THE WRONG PLACE!
             } else if (gamepad1.right_trigger > 0) {
+                servoLeftClaw.setPosition(0.415); // Closes Left Claw.
+                servoRightClaw.setPosition(0.735); // Closes Right Claw.
                 previousGamepadButton = (motorRightViperSlide.getCurrentPosition() + 100);
                 motorViperSlideSpeed = 0.4;
                 last_button = "right trigger"; // Sets last button to "right bumper".
@@ -237,7 +241,8 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
                 last_button = "right stick button"; // Sets last button to "right stick button".
             }
 
-            // If the robot is in Field-Centric Mode, the robot will NOT have a head (meaning that the robot's controls WILL NOT change based off the direction it is facing). What direction is forward can be done be resetting the yaw angle to 0 degrees (through pressing gamepad.back).
+            // If the robot is in Field-Centric Mode, the robot will NOT have a head (meaning that the robot's controls WILL NOT change based off the direction it is facing).
+            // What direction is forward can be done be resetting the yaw angle to 0 degrees (through pressing gamepad.back).
             if (isFieldCentric) {
 
                 // Calculate motor powers using mecanum drive kinematics.
@@ -270,7 +275,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             }
 
             // If the robot is in Robot-Centric Mode, the robot will WILL have a head (meaning that the robot's controls WILL change based off the direction it is facing).
-            // You can still reset the yaw angle to 0 by using the back button
+            // You can still reset the yaw angle to 0 by using the back button in Robot-Centric mode.
             else {
                 // Calculate motor powers using mecanum drive kinematics.
                 double frontLeftPower = (forward + sideways + rotation) * ltSpeed;
