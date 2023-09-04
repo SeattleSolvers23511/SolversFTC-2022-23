@@ -215,6 +215,11 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             motorLeftViperSlide.setTargetPosition(newViperSlidePosition); // This sets the target position of the right viper slide to newViperSlidePosition.
             motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This moves the left viper slide motors to move to the value of newViperSlidePosition.
 
+            // Sets viper slide speed to 0 when it is very close to its position that it needs to go to, which prevents the motors from stalling and burning out.
+            if (motorRightViperSlide.getCurrentPosition() + 50 > newViperSlidePosition && motorRightViperSlide.getCurrentPosition() - 50  < newViperSlidePosition) {
+                motorViperSlideSpeed = 0;
+            }
+
             // Creates three variables that are used for the Mecanum wheel calculations.
             double forward, sideways, rotation;
 
