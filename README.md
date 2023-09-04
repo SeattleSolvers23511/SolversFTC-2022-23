@@ -12,8 +12,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
   - This file uses `RUN_USING_ENCODERS` and `ZeroPowerBehavior.BRAKE`. 
 
   - Added control for the claw:
-	- Left Bumper opens claw
-    	- Right Bumper opens claw
+	- Left Bumper opens claw, Right Bumper closes claw
         
   - Added control for the viper slides (`motorLeftViperSlide` & `motorRightViperSlide`):
 
@@ -21,7 +20,7 @@ It has been modified by adding the TeleOp code for [GoBilda's Strafer Chassis Ki
 
     - Up Button on dPad moves both viper slide motors counterclockwise (up) at the speed of `motorViperSlideSpeed` (which is `0.4`, or `40%` speed).
     - Down Button on dPad moves both viper slide motors clockwise (down) at the speed of `-motorViperSlideSpeed`
-    - Right Bumper moves both viper slide motors clockwise (down) past the speed of `-motorViperSlideSpeed` PAST ALL LIMITS. THIS IS ONLY TO BE USED IN EMERGENCY PURPOSES IN CASE IF THE VIPER SLIDE ENCODER TICK VALUE IS RESET to 0 AT THE WRONG PLACE. 
+    - Right Trigger moves both viper slide motors clockwise (down) past the speed of `-motorViperSlideSpeed` PAST ALL LIMITS. THIS IS ONLY TO BE USED IN EMERGENCY PURPOSES IN CASE IF THE VIPER SLIDE ENCODER TICK VALUE IS RESET TO 0 AT THE WRONG PLACE. 
 
       - While using dPad buttons, you can only move up if the encoder tick value is greater than `-4300` (which is negative since for our viper slide motor, moving it counterclockwise moves it up), which prevents it from moving past its limits and possibly damaging the motor. In addition, you can only move down if the encoder tick value is less than `0`, which prevents it from moving too far down.
 
