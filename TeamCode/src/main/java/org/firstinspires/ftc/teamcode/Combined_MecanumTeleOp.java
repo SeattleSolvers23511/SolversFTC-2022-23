@@ -216,6 +216,7 @@ public class Combined_MecanumTeleOp extends LinearOpMode {
             motorLeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION); // This moves the left viper slide motors to move to the value of newViperSlidePosition.
 
             // Sets viper slide speed to 0 when it is very close to its position that it needs to go to, which prevents the motors from stalling and burning out.
+            // This happens because this TeleOp code is in a while loop, meaning that the viper slides are constantly moving and they are never set to 0.
             if (motorRightViperSlide.getCurrentPosition() + 50 > newViperSlidePosition && motorRightViperSlide.getCurrentPosition() - 50  < newViperSlidePosition) {
                 motorViperSlideSpeed = 0;
             }
