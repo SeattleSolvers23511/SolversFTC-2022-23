@@ -132,19 +132,19 @@ public class autonScoring extends LinearOpMode{
 
     public void pickUpCone(int coneNumber) {
         int conePosition = 1;
-        if (coneNumber == 1){
+        if (coneNumber == 5){
             conePosition = -466;
         }
-        else if (coneNumber == 2){
+        else if (coneNumber == 4){
             conePosition = -933;
         }
         else if (coneNumber == 3){
             conePosition = -1400;
         }
-        else if (coneNumber == 4){
+        else if (coneNumber == 2){
             conePosition = -1867;
         }
-        else if (coneNumber == 5){
+        else if (coneNumber == 1){
             conePosition = -2333;
 
         }
