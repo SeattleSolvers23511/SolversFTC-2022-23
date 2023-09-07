@@ -146,8 +146,8 @@ public class autonScoring extends LinearOpMode{
         }
         else if (coneNumber == 1){
             conePosition = -2333;
-
         }
+
         motorLeftViperSlide.setPower(0.8);
         motorRightViperSlide.setPower(0.8);
         motorLeftViperSlide.setTargetPosition(conePosition);
