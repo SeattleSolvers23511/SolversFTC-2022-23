@@ -1,6 +1,7 @@
 # NOTICE
 
 This repository contains the public FTC SDK for the POWERPLAY (2022-2023) competition season for the FTC Team #23511, [Seattle Solvers](seattlesolvers.com).
+We do NOT share current season code, but only past season code. 
 
 ## TeleOp Code Modifications
 
